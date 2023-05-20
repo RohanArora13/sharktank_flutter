@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>326995308043-ge2sjqcp4sqcco15uiqps4b7ckdllor3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.326995308043-ge2sjqcp4sqcco15uiqps4b7ckdllor3</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBsO8OGE3joEeu7j6LSoZ8gXplPVp8lm2U</string>
+	<key>GCM_SENDER_ID</key>
+	<string>326995308043</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.sharktank</string>
+	<key>PROJECT_ID</key>
+	<string>shark-tank-9357a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>shark-tank-9357a.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:326995308043:ios:405b8126b5e263663c210e</string>
+</dict>
+</plist>

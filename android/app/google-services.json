@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "326995308043",
+    "project_id": "shark-tank-9357a",
+    "storage_bucket": "shark-tank-9357a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326995308043:android:592641fb6fbcfb9b3c210e",
+        "android_client_info": {
+          "package_name": "com.example.sharktank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326995308043-iljite413nmqt3ll15cugsevitt0n2bn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACoeu78rl2Fd4GalWe8dWQAO5Oe2XZSEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326995308043-iljite413nmqt3ll15cugsevitt0n2bn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
