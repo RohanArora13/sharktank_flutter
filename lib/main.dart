@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sharktank/home/screen/home.dart';
+import 'episode/episode_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -189,7 +190,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: SecondPage(),
+      // change this to second page for animation
+      home: EpisodeScreen(),
     );
   }
 }
