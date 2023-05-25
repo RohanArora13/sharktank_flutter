@@ -2,8 +2,28 @@ import 'package:flutter/material.dart';
 
 class Utils {
   static const Color lightblue = Color.fromARGB(255, 211, 223, 250);
-    static const Color searchGrey = Color.fromARGB(255, 229, 224, 224);
+  static const Color searchGrey = Color.fromARGB(255, 229, 224, 224);
 
+  static const List<String> staticIndustryList = [
+    "All",
+    "Industry",
+    "Food",
+    "Vehicles/electrical vehicles",
+    "Beauty/fashion",
+    "Education",
+    "Agriculture",
+    "Medical/health",
+    "Manufacturing",
+    "Technology/software",
+    "Electronics",
+    "Animal/pets",
+    "Services",
+    "Hardware",
+    "Sports",
+    "Liquor/beverages",
+    "Entertainment",
+    "Furnishing/household",
+  ];
 
   // card color based on industry
   Color cardColor(String industry) {
