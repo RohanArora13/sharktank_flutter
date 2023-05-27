@@ -10,6 +10,10 @@ import 'package:sharktank/utils/utils.dart';
 import '../common/error.dart';
 
 final ShownCompanyListProvider = StateProvider<List<Company>?>((ref) => null);
+final FilteredListProvider = StateProvider<List<Company>?>((ref) => null);
+
+// if true than filter is selected
+final FilterEditedProvider = StateProvider<bool>((ref) => false);
 
 class EpisodeScreen extends ConsumerStatefulWidget {
   const EpisodeScreen({super.key});
@@ -24,7 +28,7 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
   List<Company> _ogList = [];
 
   // fliter sheet elements
-  final List<bool> _selectedSeasons = <bool>[true, true];
+  List<bool> _selectedSeasons = <bool>[true, true];
   final List<Widget> seasonNames = <Widget>[Text('season 1'), Text('season 2')];
   final List<String> industryList = Utils.staticIndustryList;
   FilterOption filterOption = FilterOption(
@@ -59,16 +63,17 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
     print(searchString);
     final Set<Company> finalSetOfSearch = Set();
 
-    final searchList = _ogList;
+    //final searchList = _ogList;
+    final searchList = ref.read(ShownCompanyListProvider);
 
     if (searchString.length > 0) {
-      final searchStartupNameList = await searchList
+      final searchStartupNameList = await searchList!
           .where((element) => element.Startup_Name_Space!
               .toLowerCase()
               .contains(searchString.toLowerCase()))
           .toList();
 
-      final searchStartupDescList = await searchList
+      final searchStartupDescList = await searchList!
           .where((element) => element.Business_Description!
               .toLowerCase()
               .contains(searchString.toLowerCase()))
@@ -85,15 +90,94 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
           .read(ShownCompanyListProvider.notifier)
           .update((state) => finalSetOfSearch.toList());
     } else {
-      // if search length is zero show all
-      ref.read(ShownCompanyListProvider.notifier).update((state) => _ogList);
+      // if list is not filtered
+      if (!ref.read(FilterEditedProvider)) {
+        // if search length is zero show all
+        ref.read(ShownCompanyListProvider.notifier).update((state) => _ogList);
+      } else {
+        ref
+            .read(ShownCompanyListProvider.notifier)
+            .update((state) => ref.read(FilteredListProvider));
+      }
     }
 
     //finalSetOfSearch.add();
     //print("searchList" + searchList.toString());
   }
 
-  void onFilter() {}
+  void onFilter() {
+    Set<Company> filteredList = _ogList.toSet();
+    if (filterOption.selectedIndustry != "All") {
+      filteredList = filteredList
+          .where((element) =>
+              element.Industry!.toLowerCase() ==
+              filterOption.selectedIndustry.toLowerCase())
+          .toSet();
+    }
+
+    if (!(filterOption.selectedSeasons.contains("season1") &&
+        filterOption.selectedSeasons.contains("season2"))) {
+      //season_option = true;
+      if (filterOption.selectedSeasons.contains("season1")) {
+        filteredList =
+            filteredList.where((element) => element.Season_Number == 1).toSet();
+      }
+      if (filterOption.selectedSeasons.contains("season2")) {
+        filteredList =
+            filteredList.where((element) => element.Season_Number == 2).toSet();
+      }
+    }
+    ref
+        .watch(FilteredListProvider.notifier)
+        .update((state) => filteredList.toList());
+
+    ref
+        .watch(ShownCompanyListProvider.notifier)
+        .update((state) => filteredList.toList());
+  }
+
+  void onFilterChange() {
+    // check default filter is selected or not
+    bool industry_option = false;
+    bool season_option = false;
+
+    if (filterOption.selectedIndustry != "All") {
+      industry_option = true;
+    } else {
+      industry_option = false;
+    }
+
+    if (filterOption.selectedSeasons.contains("season1") &&
+        filterOption.selectedSeasons.contains("season2")) {
+      season_option = false;
+    } else {
+      season_option = true;
+    }
+    setState(() {
+      //print(filterOption.toString());
+      if (industry_option || season_option) {
+        ref.read(FilterEditedProvider.notifier).update((state) => true);
+        // print("filter bool = true");
+        //return true;
+      } else {
+        ref.read(FilterEditedProvider.notifier).update((state) => false);
+        // print("filter bool = false");
+        // return false;
+      }
+    });
+  }
+
+  void resetFilter() {
+    setState(() {
+      _selectedSeasons = [true, true];
+      filterOption.selectedSeasons = {"season1", "season2"};
+      filterOption.selectedIndustry = "All";
+      ref.read(FilterEditedProvider.notifier).update((state) => false);
+      ref
+          .watch(ShownCompanyListProvider.notifier)
+          .update((state) => _ogList.toList());
+    });
+  }
 
   @override
   void initState() {
@@ -117,15 +201,31 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Align(
-            //   alignment: Alignment.topCenter,
-            //   child: Image.asset(
-            //     alignment: Alignment.center,
-            //     height: 80,
-            //     fit: BoxFit.contain,
-            //     "assets/shark_tank_logo.png",
-            //   ),
-            // ),
+            //heading
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "SHARK TANK",
+                    style: TextStyle(
+                        fontFamily: 'kenyan_coffee',
+                        fontSize: 30,
+                        color: Color.fromARGB(255, 57, 149, 255)),
+                  ),
+                  Text(
+                    " INDIA",
+                    style: TextStyle(
+                        fontFamily: 'kenyan_coffee',
+                        fontSize: 30,
+                        color: Color.fromARGB(255, 194, 202, 36)),
+                  )
+                ],
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Row(
@@ -182,22 +282,41 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                    child: Container(
-                      //color: Color.fromARGB(255, 222, 221, 221),
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 222, 221, 221),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: IconButton(
-                        color: Color.fromARGB(255, 91, 91, 91),
-                        onPressed: () => showModalBottomSheet(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20))),
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            context: context,
-                            builder: (context) => BottomSheetFilter()),
-                        icon: Icon(Icons.filter_list),
-                      ),
+                    child: Stack(
+                      children: [
+                        Container(
+                          //color: Color.fromARGB(255, 222, 221, 221),
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 222, 221, 221),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: IconButton(
+                            color: Color.fromARGB(255, 91, 91, 91),
+                            onPressed: () => showModalBottomSheet(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20))),
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                context: context,
+                                builder: (context) => BottomSheetFilter()),
+                            icon: Icon(Icons.filter_list),
+                          ),
+                        ),
+                        ref.watch(FilterEditedProvider)
+                            ? Positioned(
+                                right: 10,
+                                top: 10,
+                                child: Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 255, 92, 81),
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              )
+                            : Container(
+                                height: 0,
+                              )
+                      ],
                     ),
                   ),
                   // SizedBox(
@@ -223,6 +342,8 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
       ),
     );
   }
+
+  //bottom sheet for filter
 
   Widget BottomSheetFilter() {
     return StatefulBuilder(
@@ -271,7 +392,6 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
                     // adding in filter model
                     int count_index = 0;
                     for (final bool value in _selectedSeasons) {
-                      
                       if (value && count_index == 0) {
                         filterOption.selectedSeasons.add("season1");
                       } else if (value == false && count_index == 0) {
@@ -284,8 +404,9 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
                       }
                       count_index += 1;
                     }
-                   // print(_selectedSeasons);
-                  // print(filterOption.selectedSeasons);
+                    onFilterChange();
+                    // print(_selectedSeasons);
+                    // print(filterOption.selectedSeasons);
                   });
                 },
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -331,10 +452,57 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
                 onChanged: (String? newValue) {
                   setState(() {
                     filterOption.selectedIndustry = newValue!;
+                    onFilterChange();
                     // dropDownValue = newValue!;
                   });
                 },
               ),
+              SizedBox(
+                height: 40,
+              ),
+              // bottom buttons
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: 45,
+                      width: 120,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            onFilter();
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Apply",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )),
+                    ),
+                    Container(
+                      height: 45,
+                      width: 120,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              // backgroundColor: MaterialStateProperty.all<Color>(
+                              //     Color.fromARGB(255, 181, 181, 181))
+                              ),
+                          onPressed: ref.watch(FilterEditedProvider)
+                              ? () {
+                                  resetFilter();
+                                  setState(() {});
+                                }
+                              : null,
+                          child: Text(
+                            "clear",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         );
