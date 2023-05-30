@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/company_model.dart';
-import 'episode_repository.dart';
+import '../startup_card/startup_card_repository.dart';
 
 final EpisodeControllerProvider = Provider((ref) =>
     EpisodeController(episodeRepository: ref.watch(EpisodeRepositoryProvider)));
 
-
-final GetCompanyProvider = FutureProvider((ref) => ref.watch(EpisodeControllerProvider).getCompanyInfo());
+final GetCompanyProvider = FutureProvider(
+    (ref) => ref.watch(EpisodeControllerProvider).getCompanyInfo());
 
 class EpisodeController {
   final EpisodeRepository _episodeRepository;

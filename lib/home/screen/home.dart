@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sharktank/episode/episode_screen.dart';
+import 'package:sharktank/startup_card/startup_card_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

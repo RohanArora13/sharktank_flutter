@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sharktank/home/screen/home.dart';
-import 'episode/episode_screen.dart';
+import 'startup_card/startup_card_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {

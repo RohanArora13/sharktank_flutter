@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:sharktank/common/loader.dart';
-import 'package:sharktank/episode/episode_controller.dart';
+import 'package:sharktank/startup_card/startup_card_controller.dart';
 import 'package:sharktank/model/company_model.dart';
 import 'package:sharktank/model/filter_options.dart';
 import 'package:sharktank/utils/utils.dart';
@@ -203,28 +203,28 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
           children: [
             //heading
 
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "SHARK TANK",
-                    style: TextStyle(
-                        fontFamily: 'kenyan_coffee',
-                        fontSize: 30,
-                        color: Color.fromARGB(255, 57, 149, 255)),
-                  ),
-                  Text(
-                    " INDIA",
-                    style: TextStyle(
-                        fontFamily: 'kenyan_coffee',
-                        fontSize: 30,
-                        color: Color.fromARGB(255, 194, 202, 36)),
-                  )
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 10),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text(
+            //         "SHARK TANK",
+            //         style: TextStyle(
+            //             fontFamily: 'kenyan_coffee',
+            //             fontSize: 30,
+            //             color: Color.fromARGB(255, 57, 149, 255)),
+            //       ),
+            //       Text(
+            //         " INDIA",
+            //         style: TextStyle(
+            //             fontFamily: 'kenyan_coffee',
+            //             fontSize: 30,
+            //             color: Color.fromARGB(255, 194, 202, 36)),
+            //       )
+            //     ],
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
