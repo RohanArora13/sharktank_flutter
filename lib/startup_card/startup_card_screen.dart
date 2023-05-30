@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:sharktank/common/loader.dart';
@@ -35,6 +36,18 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
     selectedSeasons: {"season1", "season2"},
     selectedIndustry: 'All',
   );
+
+  // scroll controller
+  final ScrollController _scrollcontroller = ScrollController();
+  bool isVisible = false;
+
+  void _scrollUp() {
+    _scrollcontroller.animateTo(
+      _scrollcontroller.position.minScrollExtent,
+      duration: Duration(seconds: 2),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
 
   @override
   void dispose() {
@@ -190,6 +203,33 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
     //     });
     //   });
     //});
+
+    _scrollcontroller.addListener(() {
+      if (_scrollcontroller.position.pixels == 0) {
+        //if (isVisible == true) {
+        setState(() {
+          isVisible = false;
+        });
+        // }
+      }
+      if (_scrollcontroller.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (isVisible == true) {
+          setState(() {
+            isVisible = false;
+          });
+        }
+      } else {
+        if (_scrollcontroller.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (isVisible == false) {
+            setState(() {
+              isVisible = true;
+            });
+          }
+        }
+      }
+    });
   }
 
   @override
@@ -198,6 +238,14 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final List<Company>? listCompanies = ref.watch(ShownCompanyListProvider);
     return Scaffold(
+      floatingActionButton: Visibility(
+        visible: isVisible,
+        child: FloatingActionButton.small(
+          backgroundColor: Color.fromARGB(227, 75, 168, 255),
+          onPressed: _scrollUp,
+          child: Icon(Icons.arrow_upward),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -329,6 +377,7 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
                 ? LoaderCircular()
                 : Expanded(
                     child: ListView.builder(
+                        controller: _scrollcontroller,
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -532,52 +581,62 @@ class _EpisodeScreenState extends ConsumerState<EpisodeScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 8, 0, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                            width: 250,
-                            child: Text(
-                              maxLines: 2,
-                              company.Startup_Name_Space.toString(),
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
-                            ))),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: 230,
-                          child: Text(
-                            company.Business_Description.toString(),
-                            maxLines: 2,
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    height: 5,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 8, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                  width: 250,
+                                  child: Text(
+                                    maxLines: 2,
+                                    company.Startup_Name_Space.toString(),
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ))),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                width: 230,
+                                child: Text(
+                                  company.Business_Description.toString(),
+                                  maxLines: 2,
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
                   ),
-                  Image.asset(
-                    fit: BoxFit.contain,
-                    Utils().cardImage(company.Industry.toString().trim()),
-                    height: 100,
-                    width: 100,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Image.asset(
+                          fit: BoxFit.contain,
+                          Utils().cardImage(company.Industry.toString().trim()),
+                          height: 100,
+                          width: 100,
+                        )
+                      ],
+                    ),
                   )
-                ],
-              )
-            ]),
+                ]),
           ),
         ),
       ),
